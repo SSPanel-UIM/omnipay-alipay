@@ -1,0 +1,52 @@
+{
+  "name": "sspanel-uim/omnipay-alipay",
+  "type": "library",
+  "description": "Alipay gateway for Omnipay payment processing library",
+  "keywords": [
+    "alipay",
+    "gateway",
+    "merchant",
+    "omnipay",
+    "pay",
+    "payment",
+    "purchase"
+  ],
+  "homepage": "https://github.com/sspanel-uim/omnipay-alipay",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "SSPanel-UIM Team",
+      "email": "cat@sspanel.org"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\Alipay\\": "src/",
+      "Omnipay\\Alipay\\Tests\\": "tests/"
+    },
+    "files": [
+      "src/Common/helpers.php"
+    ]
+  },
+  "require": {
+    "ext-bcmath": "*",
+    "ext-json": "*",
+    "ext-simplexml": "*",
+    "ext-openssl": "*",
+    "omnipay/common": "^3",
+    "php-http/guzzle7-adapter": "^1"
+  },
+  "require-dev": {
+    "omnipay/tests": "^4",
+    "http-interop/http-factory-guzzle": "^1",
+    "nunomaduro/phpinsights": "^2"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}
