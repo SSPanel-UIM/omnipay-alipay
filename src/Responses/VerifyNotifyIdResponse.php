@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
-class VerifyNotifyIdResponse extends AbstractLegacyResponse
+final class VerifyNotifyIdResponse extends AbstractLegacyResponse
 {
-
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
-        return ($this->data['result'] . '') === 'true';
+        return $this->data['result'] . '' === 'true';
     }
 }

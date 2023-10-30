@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
+use Exception;
 use Omnipay\Alipay\AopAppGateway;
 use Omnipay\Alipay\Common\Signer;
 use Omnipay\Alipay\Responses\AopCompletePurchaseResponse;
@@ -9,9 +12,8 @@ use Omnipay\Alipay\Responses\AopCompleteRefundResponse;
 use Omnipay\Alipay\Responses\AopTradeAppPayResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
 
-class AopAppGatewayTest extends AbstractGatewayTestCase
+final class AopAppGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var AopAppGateway $gateway
      */
@@ -20,16 +22,12 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
     protected $options;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gateway = new AopAppGateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->setAppId($this->appId);
         $this->gateway->setPrivateKey(ALIPAY_AOP_PRIVATE_KEY);
-        //$this->gateway->setAlipayPublicKey(file_get_contents($this->alipayPublicKey));
-        //$this->gateway->setEncryptKey($this->appEncryptKey);
-        //$this->gateway->setNotifyUrl('http://www.guoshuzc.com/api/pay/alipay_recharge_notify');
-        //$this->gateway->setAlipaySdk('alipay_sdk');
     }
 
 
@@ -41,7 +39,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         $response = $this->gateway->purchase(
             [
                 'biz_content' => [
-                    'subject'      => 'test',
+                    'subject' => 'test',
                     'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
                     'total_amount' => '0.01',
                     'product_code' => 'QUICK_MSECURITY_PAY',
@@ -90,7 +88,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         $response = $this->gateway->purchase(
             [
                 'biz_content' => [
-                    'subject'      => 'test',
+                    'subject' => 'test',
                     'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
                     'total_amount' => '0.01',
                     'product_code' => 'QUICK_MSECURITY_PAY',
@@ -104,10 +102,13 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function testCompletePurchaseNotify()
     {
         $testPrivateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';
-        $testPublicKey  = ALIPAY_ASSET_DIR . '/dist/common/rsa_public_key.pem';
+        $testPublicKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_public_key.pem';
 
         $this->gateway = new AopAppGateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->setAppId($this->appId);
@@ -123,7 +124,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         $signer = new Signer($data);
         $signer->setSort(true);
         $signer->setEncodePolicy(Signer::ENCODE_POLICY_QUERY);
-        $data['sign']      = $signer->signWithRSA($testPrivateKey);
+        $data['sign'] = $signer->signWithRSA($testPrivateKey);
         $data['sign_type'] = 'RSA';
 
         $this->gateway->setAlipayPublicKey($testPublicKey);
@@ -132,7 +133,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
             /** @var AopCompletePurchaseResponse $response */
             $response = $this->gateway->completePurchase()->setParams($data)->send();
         } catch (InvalidRequestException $e) {
-            $this->assertTrue(false);
+            $this->fail();
         }
 
         $this->assertEquals(
@@ -147,10 +148,13 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function testCompletePurchaseNotifyWithInlineKey()
     {
         $testPrivateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';
-        $testPublicKey  = ALIPAY_ASSET_DIR . '/dist/common/rsa_public_key_inline.pem';
+        $testPublicKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_public_key_inline.pem';
 
         $this->gateway = new AopAppGateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->setAppId($this->appId);
@@ -166,7 +170,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         $signer = new Signer($data);
         $signer->setSort(true);
         $signer->setEncodePolicy(Signer::ENCODE_POLICY_QUERY);
-        $data['sign']      = $signer->signWithRSA($testPrivateKey);
+        $data['sign'] = $signer->signWithRSA($testPrivateKey);
         $data['sign_type'] = 'RSA';
 
         $this->gateway->setAlipayPublicKey($testPublicKey);
@@ -175,7 +179,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
             /** @var AopCompletePurchaseResponse $response */
             $response = $this->gateway->completePurchase()->setParams($data)->send();
         } catch (InvalidRequestException $e) {
-            $this->assertTrue(false);
+            $this->fail();
         }
 
         $this->assertEquals(
@@ -189,10 +193,13 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         $this->assertEquals('201609232100100306021234567', $response->getData()['trade_no']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testCompleteRefundNotify()
     {
         $testPrivateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';
-        $testPublicKey  = ALIPAY_ASSET_DIR . '/dist/common/rsa_public_key_inline.pem';
+        $testPublicKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_public_key_inline.pem';
 
         $this->gateway = new AopAppGateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->setAppId($this->appId);
@@ -208,7 +215,7 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         $signer = new Signer($data);
         $signer->setSort(true);
         $signer->setEncodePolicy(Signer::ENCODE_POLICY_QUERY);
-        $data['sign']      = $signer->signWithRSA($testPrivateKey);
+        $data['sign'] = $signer->signWithRSA($testPrivateKey);
         $data['sign_type'] = 'RSA';
 
         $this->gateway->setAlipayPublicKey($testPublicKey);
@@ -219,12 +226,6 @@ class AopAppGatewayTest extends AbstractGatewayTestCase
         } catch (InvalidRequestException $e) {
             // Params error or sign not match.
             $response = -1;
-        }
-
-        if ($response->isSuccessful() && $response->isRefunded()) {
-            // Refund successful
-        } else {
-            // Refund not successful
         }
 
         $this->assertTrue($response !== -1);

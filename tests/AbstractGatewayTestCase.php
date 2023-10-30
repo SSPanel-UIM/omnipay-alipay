@@ -1,28 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
 use Omnipay\Tests\GatewayTestCase;
 
 abstract class AbstractGatewayTestCase extends GatewayTestCase
 {
-    protected $partner = ALIPAY_PARTNER;
+    protected string $partner = ALIPAY_PARTNER;
 
-    protected $key = ALIPAY_KEY;
+    protected string $key = ALIPAY_KEY;
 
-    protected $sellerId = ALIPAY_SELLER_ID;
+    protected string $sellerId = ALIPAY_SELLER_ID;
 
-    protected $appId = ALIPAY_APP_ID;
+    protected string $appId = ALIPAY_APP_ID;
 
-    protected $appPrivateKey = ALIPAY_APP_PRIVATE_KEY;
+    protected string $appPrivateKey = ALIPAY_APP_PRIVATE_KEY;
 
-    protected $alipayPublicKey = ALIPAY_PUBLIC_KEY;
+    protected string $alipayPublicKey = ALIPAY_PUBLIC_KEY;
 
-    protected $appEncryptKey = ALIPAY_APP_ENCRYPT_KEY;
-
-
-    protected function setUp()
-    {
-        parent::setUp();
-    }
+    protected string $appEncryptKey = ALIPAY_APP_ENCRYPT_KEY;
 }

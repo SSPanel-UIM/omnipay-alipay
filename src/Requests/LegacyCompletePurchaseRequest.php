@@ -1,44 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
 use Omnipay\Alipay\Responses\LegacyCompletePurchaseResponse;
 use Omnipay\Common\Message\ResponseInterface;
 
-class LegacyCompletePurchaseRequest extends AbstractLegacyRequest
+final class LegacyCompletePurchaseRequest extends AbstractLegacyRequest
 {
-    protected $verifyNotifyId = true;
-
-
-    /**
-     * Get the raw data array for this message. The format of this varies from gateway to
-     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     *
-     * @return mixed
-     */
-    public function getData()
-    {
-        return $this->getParams();
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getParams()
-    {
-        return $this->getParameter('params');
-    }
-
+    protected bool $verifyNotifyId = true;
 
     /**
      * Send the request with specified data
      *
-     * @param  mixed $data The data to send
+     * @param mixed $data The data to send
      *
      * @return ResponseInterface
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         if (array_get($data, 'result')) {
             $request = new LegacyVerifyAppPayReturnRequest($this->httpClient, $this->httpRequest);
@@ -48,13 +28,13 @@ class LegacyCompletePurchaseRequest extends AbstractLegacyRequest
             $data = $request->send()->getData();
 
             $data = array_map(
-                function ($v) {
-                    return substr($v, 1, mb_strlen($v) - 2) . '';
+                static function ($v) {
+                    return substr($v, 1, mb_strlen($v) - 2);
                 },
                 $data
             );
 
-            if (array_get($data, 'success') == 'true') {
+            if (array_get($data, 'success') === 'true') {
                 $data['trade_status'] = 'TRADE_SUCCESS';
             } else {
                 $data['trade_status'] = 'WAIT_BUYER_PAY';
@@ -73,27 +53,36 @@ class LegacyCompletePurchaseRequest extends AbstractLegacyRequest
         return $this->response = new LegacyCompletePurchaseResponse($this, $data);
     }
 
+    /**
+     * Get the raw data array for this message. The format of this varies from gateway to
+     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
+     *
+     * @return mixed
+     */
+    public function getData(): mixed
+    {
+        return $this->getParams();
+    }
+
+    public function getParams(): mixed
+    {
+        return $this->getParameter('params');
+    }
+
+    public function setVerifyNotifyId(bool $verifyNotifyId): LegacyCompletePurchaseRequest
+    {
+        $this->verifyNotifyId = $verifyNotifyId;
+
+        return $this;
+    }
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setParams($value)
+    public function setParams($value): LegacyCompletePurchaseRequest
     {
         return $this->setParameter('params', $value);
-    }
-
-
-    /**
-     * @param boolean $verifyNotifyId
-     *
-     * @return \Omnipay\Alipay\Requests\LegacyCompletePurchaseRequest
-     */
-    public function setVerifyNotifyId($verifyNotifyId)
-    {
-        $this->verifyNotifyId = $verifyNotifyId;
-
-        return $this;
     }
 }

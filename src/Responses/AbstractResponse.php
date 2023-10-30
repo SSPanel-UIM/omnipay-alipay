@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Common\Message\AbstractResponse as Response;
@@ -10,8 +12,7 @@ abstract class AbstractResponse extends Response
     {
         if (is_null($key)) {
             return $this->data;
-        } else {
-            return array_get($this->data, $key, $default);
         }
+        return array_get($this->data, $key, $default);
     }
 }

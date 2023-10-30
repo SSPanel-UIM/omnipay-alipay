@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
 use Exception;
@@ -10,28 +12,28 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class AopNotifyRequest extends AbstractAopRequest
+final class AopNotifyRequest extends AbstractAopRequest
 {
-
     /**
      * @var ParameterBag
      */
-    public $params;
+    public ParameterBag $params;
 
-    protected $verifyNotifyId = false;
+    protected bool $verifyNotifyId = false;
 
-    protected $sort = true;
+    protected bool $sort = true;
 
-    protected $encodePolicy = 'QUERY';
-
+    protected string $encodePolicy = 'QUERY';
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     * @return mixed
+     *
+     * @return array
+     *
      * @throws InvalidRequestException
      */
-    public function getData()
+    public function getData(): array
     {
         $this->initParams();
 
@@ -40,45 +42,22 @@ class AopNotifyRequest extends AbstractAopRequest
         return $this->params->all();
     }
 
-
-    /**
-     * @return array|mixed
-     */
-    private function initParams()
-    {
-        $params = $this->getParams();
-
-        if (! $params) {
-            $params = array_merge($_GET, $_POST);
-        }
-
-        $this->params = new ParameterBag($params);
-
-        return $params;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getParams()
+    public function getParams(): mixed
     {
         return $this->getParameter('params');
     }
-
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setParams($value)
+    public function setParams($value): AopNotifyRequest
     {
         return $this->setParameter('params', $value);
     }
 
-
-    public function validateParams()
+    public function validateParams(): void
     {
         if (empty($this->params->all())) {
             throw new InvalidRequestException('The `params` or $_REQUEST is empty');
@@ -93,16 +72,16 @@ class AopNotifyRequest extends AbstractAopRequest
         }
     }
 
-
     /**
      * Send the request with specified data
      *
-     * @param  mixed $data The data to send
+     * @param mixed $data The data to send
      *
      * @return ResponseInterface
+     *
      * @throws InvalidRequestException
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         $this->verifySignature();
 
@@ -115,26 +94,61 @@ class AopNotifyRequest extends AbstractAopRequest
         return $this->response = new AopNotifyResponse($this, $data);
     }
 
+    public function setSort(bool $sort): AopNotifyRequest
+    {
+        $this->sort = $sort;
+
+        return $this;
+    }
+
+    public function setEncodePolicy(string $encodePolicy): AopNotifyRequest
+    {
+        $this->encodePolicy = $encodePolicy;
+
+        return $this;
+    }
+
+    public function getPartner(): mixed
+    {
+        return $this->getParameter('partner');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setPartner($value): AopNotifyRequest
+    {
+        return $this->setParameter('partner', $value);
+    }
+
+    public function setVerifyNotifyId(bool $value): AopNotifyRequest
+    {
+        $this->verifyNotifyId = $value;
+
+        return $this;
+    }
 
     /**
      * @throws InvalidRequestException
      * @throws Exception
      */
-    protected function verifySignature()
+    protected function verifySignature(): void
     {
         $signer = new Signer($this->params->all());
         $signer->setSort($this->sort);
         $signer->setEncodePolicy($this->encodePolicy);
-        $signer->setIgnores(['sign','sign_type']);
+        $signer->setIgnores(['sign', 'sign_type']);
         $content = $signer->getContentToSign();
 
         $sign = $this->params->get('sign');
         $signType = $this->params->get('sign_type');
-        
-        if ($signType == 'RSA2') {
-            $match = (new Signer)->verifyWithRSA($content, $sign, $this->getAlipayPublicKey(), OPENSSL_ALGO_SHA256);
+
+        if ($signType === 'RSA2') {
+            $match = (new Signer())->verifyWithRSA($content, $sign, $this->getAlipayPublicKey(), OPENSSL_ALGO_SHA256);
         } else {
-            $match = (new Signer)->verifyWithRSA($content, $sign, $this->getAlipayPublicKey());
+            $match = (new Signer())->verifyWithRSA($content, $sign, $this->getAlipayPublicKey());
         }
 
         if (! $match) {
@@ -145,7 +159,7 @@ class AopNotifyRequest extends AbstractAopRequest
     /**
      * @throws InvalidRequestException
      */
-    protected function verifyNotifyId()
+    protected function verifyNotifyId(): void
     {
         if (! $this->getPartner()) {
             throw new InvalidRequestException('The partner is required for notify_id verify');
@@ -165,62 +179,14 @@ class AopNotifyRequest extends AbstractAopRequest
         }
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getPartner()
+    private function initParams(): void
     {
-        return $this->getParameter('partner');
-    }
+        $params = $this->getParams();
 
+        if (! $params) {
+            $params = array_merge($_GET, $_POST);
+        }
 
-    /**
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setPartner($value)
-    {
-        return $this->setParameter('partner', $value);
-    }
-
-
-    /**
-     * @param boolean $value
-     *
-     * @return AopNotifyRequest
-     */
-    public function setVerifyNotifyId($value)
-    {
-        $this->verifyNotifyId = $value;
-
-        return $this;
-    }
-
-
-    /**
-     * @param boolean $sort
-     *
-     * @return AopNotifyRequest
-     */
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
-
-        return $this;
-    }
-
-
-    /**
-     * @param string $encodePolicy
-     *
-     * @return AopNotifyRequest
-     */
-    public function setEncodePolicy($encodePolicy)
-    {
-        $this->encodePolicy = $encodePolicy;
-
-        return $this;
+        $this->params = new ParameterBag($params);
     }
 }

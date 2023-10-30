@@ -1,27 +1,25 @@
 <?php
 
-if (!function_exists('array_get')) {
+declare(strict_types=1);
+
+if (! function_exists('array_get')) {
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $key
-     * @param mixed  $default
+     * @param mixed|null $default
      *
      * @return mixed
      */
-    function array_get($array, $key, $default = null)
+    function array_get(array $array, string $key, mixed $default = null): mixed
     {
-        if (is_null($key)) {
-            return $array;
-        }
-
         if (isset($array[$key])) {
             return $array[$key];
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($array) || !array_key_exists($segment, $array)) {
+            if (! is_array($array) || ! array_key_exists($segment, $array)) {
                 return value($default);
             }
 
@@ -32,8 +30,8 @@ if (!function_exists('array_get')) {
     }
 }
 
-if (!function_exists('array_has')) {
-    function array_has($array, $key)
+if (! function_exists('array_has')) {
+    function array_has($array, $key): bool
     {
         if (empty($array) || is_null($key)) {
             return false;
@@ -44,7 +42,7 @@ if (!function_exists('array_has')) {
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($array) || !array_key_exists($segment, $array)) {
+            if (! is_array($array) || ! array_key_exists($segment, $array)) {
                 return false;
             }
 
@@ -55,7 +53,7 @@ if (!function_exists('array_has')) {
     }
 }
 
-if (!function_exists('value')) {
+if (! function_exists('value')) {
     /**
      * Return the default value of the given value.
      *
@@ -63,19 +61,14 @@ if (!function_exists('value')) {
      *
      * @return mixed
      */
-    function value($value)
+    function value(mixed $value): mixed
     {
         return $value instanceof Closure ? $value() : $value;
     }
 }
 
-if (!function_exists('hex2dec')) {
-    /**
-     * @param string $hex
-     *
-     * @return string
-     */
-    function hex2dec($hex)
+if (! function_exists('hex2dec')) {
+    function hex2dec(string $hex): string
     {
         $dec = '0';
 
@@ -84,7 +77,7 @@ if (!function_exists('hex2dec')) {
         for ($i = 1; $i <= $len; $i++) {
             $n = $hex[$i - 1];
             if (ctype_xdigit($n)) {
-                $dec = bcadd($dec, bcmul((string)hexdec($n), bcpow('16', (string)($len - $i))));
+                $dec = bcadd($dec, bcmul((string) hexdec($n), bcpow('16', (string) ($len - $i))));
             }
         }
 
@@ -92,13 +85,8 @@ if (!function_exists('hex2dec')) {
     }
 }
 
-if (!function_exists('getRootCertSN')) {
-    /**
-     * @param string $certPath
-     *
-     * @return string|null
-     */
-    function getRootCertSN($certPath)
+if (! function_exists('getRootCertSN')) {
+    function getRootCertSN(string $certPath): ?string
     {
         $array = explode('-----END CERTIFICATE-----', file_get_contents($certPath));
 
@@ -107,12 +95,16 @@ if (!function_exists('getRootCertSN')) {
         foreach ($array as $i) {
             $ssl = openssl_x509_parse($i . '-----END CERTIFICATE-----');
 
-            if ($ssl && in_array($ssl['signatureTypeLN'], ['sha1WithRSAEncryption', 'sha256WithRSAEncryption'])) {
+            if (
+                $ssl !== false &&
+                in_array($ssl['signatureTypeLN'], ['sha1WithRSAEncryption', 'sha256WithRSAEncryption'])
+            ) {
                 $sn = getCertSN($ssl, true);
+
                 if (is_null($rootSN)) {
                     $rootSN = $sn;
                 } else {
-                    $rootSN .= "_{$sn}";
+                    $rootSN .= "_" . $sn;
                 }
             }
         }
@@ -121,14 +113,8 @@ if (!function_exists('getRootCertSN')) {
     }
 }
 
-if (!function_exists('getCertSN')) {
-    /**
-     * @param string $cert
-     * @param bool   $parsed
-     *
-     * @return string|null
-     */
-    function getCertSN($cert, $parsed = false)
+if (! function_exists('getCertSN')) {
+    function getCertSN(string|array $cert, bool $parsed = false): ?string
     {
         if ($parsed) {
             $ssl = $cert;
@@ -139,28 +125,23 @@ if (!function_exists('getCertSN')) {
             $ssl = openssl_x509_parse($cert);
         }
 
-        if (strpos($ssl['serialNumber'], '0x') === 0) {
+        if ($ssl !== false && str_starts_with($ssl['serialNumber'], '0x')) {
             $ssl['serialNumber'] = hex2dec($ssl['serialNumber']);
         }
 
         $array = array_reverse($ssl['issuer']);
-
         $names = [];
+
         foreach ($array as $key => $value) {
-            $names[] = "{$key}={$value}";
+            $names[] = $key . "=" . $value;
         }
 
         return md5(implode(',', $names) . $ssl['serialNumber']);
     }
 }
 
-if (!function_exists('getPublicKey')) {
-    /**
-     * @param string $certPath
-     *
-     * @return string
-     */
-    function getPublicKey($certPath)
+if (! function_exists('getPublicKey')) {
+    function getPublicKey(string $certPath): string
     {
         $pkey = openssl_pkey_get_public(file_get_contents($certPath));
         $keyData = openssl_pkey_get_details($pkey);

@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
 use Omnipay\Alipay\AopJsGateway;
 use Omnipay\Alipay\Responses\AopTradeCreateResponse;
 
-class AopJsGatewayTest extends AbstractGatewayTestCase
+final class AopJsGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var AopJsGateway $gateway
      */
@@ -16,7 +17,7 @@ class AopJsGatewayTest extends AbstractGatewayTestCase
     protected $options;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gateway = new AopJsGateway($this->getHttpClient(), $this->getHttpRequest());
@@ -35,7 +36,7 @@ class AopJsGatewayTest extends AbstractGatewayTestCase
         $response = $this->gateway->purchase(
             [
                 'biz_content' => [
-                    'subject'      => 'test',
+                    'subject' => 'test',
                     'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
                     'total_amount' => '0.01',
                     'product_code' => '0.01',

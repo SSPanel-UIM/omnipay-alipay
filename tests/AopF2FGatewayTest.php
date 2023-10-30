@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
+use Exception;
 use Omnipay\Alipay\AopF2FGateway;
 use Omnipay\Alipay\Common\Signer;
 use Omnipay\Alipay\Responses\AopCompletePurchaseResponse;
@@ -12,10 +15,10 @@ use Omnipay\Alipay\Responses\AopTradeQueryResponse;
 use Omnipay\Alipay\Responses\AopTradeRefundQueryResponse;
 use Omnipay\Alipay\Responses\AopTradeRefundResponse;
 use Omnipay\Alipay\Responses\DataServiceBillDownloadUrlQueryResponse;
+use Omnipay\Common\Exception\InvalidRequestException;
 
-class AopF2FGatewayTest extends AbstractGatewayTestCase
+final class AopF2FGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var AopF2FGateway $gateway
      */
@@ -24,7 +27,10 @@ class AopF2FGatewayTest extends AbstractGatewayTestCase
     protected $options;
 
 
-    public function setUp()
+    /**
+     * @throws InvalidRequestException
+     */
+    public function setUp(): void
     {
         parent::setUp();
         $this->gateway = new AopF2FGateway($this->getHttpClient(), $this->getHttpRequest());
@@ -199,6 +205,10 @@ class AopF2FGatewayTest extends AbstractGatewayTestCase
     }
 
 
+    /**
+     * @throws InvalidRequestException
+     * @throws Exception
+     */
     public function testCompletePurchase()
     {
         $testPrivateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';
@@ -237,6 +247,10 @@ class AopF2FGatewayTest extends AbstractGatewayTestCase
         $this->assertEquals('2015061121001004400068549373', $response->getData()['trade_no']);
     }
 
+    /**
+     * @throws InvalidRequestException
+     * @throws Exception
+     */
     public function testCompleteRefund()
     {
         $testPrivateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';

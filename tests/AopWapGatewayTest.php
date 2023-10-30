@@ -1,16 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
 use Omnipay\Alipay\AopWapGateway;
-use Omnipay\Alipay\Common\Signer;
-use Omnipay\Alipay\Responses\AopCompletePurchaseResponse;
-use Omnipay\Alipay\Responses\AopCompleteRefundResponse;
 use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
 
-class AopWapGatewayTest extends AbstractGatewayTestCase
+final class AopWapGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var AopWapGateway $gateway
      */
@@ -19,7 +17,7 @@ class AopWapGatewayTest extends AbstractGatewayTestCase
     protected $options;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gateway = new AopWapGateway($this->getHttpClient(), $this->getHttpRequest());
@@ -40,7 +38,7 @@ class AopWapGatewayTest extends AbstractGatewayTestCase
                 'biz_content' => [
                     'out_trade_no' => date('YmdHis') . mt_rand(1000, 9999),
                     'total_amount' => 0.01,
-                    'subject'      => 'test',
+                    'subject' => 'test',
                     'product_code' => 'QUICK_MSECURITY_PAY',
                 ]
             ]

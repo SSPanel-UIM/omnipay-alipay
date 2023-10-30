@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay;
 
 use Omnipay\Alipay\Requests\LegacyCompletePurchaseRequest;
@@ -11,336 +13,262 @@ use Omnipay\Common\Message\AbstractRequest;
 
 abstract class AbstractLegacyGateway extends AbstractGateway
 {
-    public function getDefaultParameters()
+    public function getDefaultParameters(): array
     {
         return [
             'inputCharset' => 'UTF-8',
-            'signType'     => 'MD5',
-            'paymentType'  => '1',
-            'alipaySdk'    => 'lokielse/omnipay-alipay',
+            'signType' => 'MD5',
+            'paymentType' => '1',
+            'alipaySdk' => 'lokielse/omnipay-alipay',
         ];
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getPartner()
+    public function getPartner(): mixed
     {
         return $this->getParameter('partner');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setPartner($value)
+    public function setPartner($value): static
     {
         return $this->setParameter('partner', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getSignType()
+    public function getSignType(): mixed
     {
         return $this->getParameter('sign_type');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setSignType($value)
+    public function setSignType($value): static
     {
         return $this->setParameter('sign_type', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getPaymentType()
+    public function getPaymentType(): mixed
     {
         return $this->getParameter('payment_type');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setPaymentType($value)
+    public function setPaymentType($value): static
     {
         return $this->setParameter('payment_type', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getKey()
+    public function getKey(): mixed
     {
         return $this->getParameter('key');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setKey($value)
+    public function setKey($value): static
     {
         return $this->setParameter('key', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getPrivateKey()
+    public function getPrivateKey(): mixed
     {
         return $this->getParameter('private_key');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setPrivateKey($value)
+    public function setPrivateKey($value): static
     {
         return $this->setParameter('private_key', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getAlipayPublicKey()
+    public function getAlipayPublicKey(): mixed
     {
         return $this->getParameter('alipay_public_key');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setAlipayPublicKey($value)
+    public function setAlipayPublicKey($value): static
     {
         return $this->setParameter('alipay_public_key', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getSellerId()
+    public function getSellerId(): mixed
     {
         return $this->getParameter('seller_id');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setSellerId($value)
+    public function setSellerId($value): static
     {
         return $this->setParameter('seller_id', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getSellerEmail()
+    public function getSellerEmail(): mixed
     {
         return $this->getParameter('seller_email');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setSellerEmail($value)
+    public function setSellerEmail($value): static
     {
         return $this->setParameter('seller_email', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getSellerAccountName()
+    public function getSellerAccountName(): mixed
     {
         return $this->getParameter('seller_account_name');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setSellerAccountName($value)
+    public function setSellerAccountName($value): static
     {
         return $this->setParameter('seller_account_name', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getNotifyUrl()
+    public function getNotifyUrl(): mixed
     {
         return $this->getParameter('notify_url');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setNotifyUrl($value)
+    public function setNotifyUrl($value): static
     {
         return $this->setParameter('notify_url', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getReturnUrl()
+    public function getReturnUrl(): mixed
     {
         return $this->getParameter('return_url');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setReturnUrl($value)
+    public function setReturnUrl($value): static
     {
         return $this->setParameter('return_url', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getInputCharset()
+    public function getInputCharset(): mixed
     {
         return $this->getParameter('_input_charset');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setInputCharset($value)
+    public function setInputCharset($value): static
     {
         return $this->setParameter('_input_charset', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getItBPay()
+    public function getItBPay(): mixed
     {
         return $this->getParameter('it_b_pay');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setItBPay($value)
+    public function setItBPay($value): static
     {
         return $this->setParameter('it_b_pay', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getAlipaySdk()
+    public function getAlipaySdk(): mixed
     {
         return $this->getParameter('alipay_sdk');
     }
-
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setAlipaySdk($value)
+    public function setAlipaySdk($value): static
     {
         return $this->setParameter('alipay_sdk', $value);
     }
 
-
     /**
      * @param array $parameters
      *
-     * @return LegacyCompletePurchaseRequest|AbstractRequest
+     * @return AbstractRequest
      */
-    public function completePurchase(array $parameters = [])
+    public function completePurchase(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(LegacyCompletePurchaseRequest::class, $parameters);
     }
 
-
     /**
      * @param array $parameters
      *
-     * @return LegacyRefundRequest|AbstractRequest
+     * @return AbstractRequest
      */
-    public function refund(array $parameters = [])
+    public function refund(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(LegacyRefundRequest::class, $parameters);
     }
 
-
     /**
      * @param array $parameters
      *
-     * @return LegacyRefundRequest|AbstractRequest
+     * @return AbstractRequest
      */
-    public function completeRefund(array $parameters = [])
+    public function completeRefund(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(LegacyCompleteRefundRequest::class, $parameters);
     }
 
-
     /**
      * @param array $parameters
      *
-     * @return LegacyQueryRequest|AbstractRequest
+     * @return AbstractRequest
      */
-    public function query(array $parameters = [])
+    public function query(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(LegacyQueryRequest::class, $parameters);
     }

@@ -1,44 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
 use Omnipay\Alipay\Responses\AopCompletePurchaseResponse;
 use Omnipay\Alipay\Responses\AopTradeQueryResponse;
 use Omnipay\Common\Exception\InvalidRequestException;
 
-class AopCompletePurchaseRequest extends AbstractAopRequest
+final class AopCompletePurchaseRequest extends AbstractAopRequest
 {
-
-    /**
-     * Get the raw data array for this message. The format of this varies from gateway to
-     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     *
-     * @return mixed
-     * @throws InvalidRequestException
-     */
-    public function getData()
-    {
-        $this->validateParams();
-
-        return $this->getParams();
-    }
-
-
-    public function validateParams()
-    {
-        $this->validate('params');
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getParams()
-    {
-        return $this->getParameter('params');
-    }
-
-
     /**
      * Send the request with specified data
      *
@@ -46,7 +17,7 @@ class AopCompletePurchaseRequest extends AbstractAopRequest
      *
      * @return AopCompletePurchaseResponse
      */
-    public function sendData($data)
+    public function sendData($data): AopCompletePurchaseResponse
     {
         if (isset($data['result'])) {
             $request = new AopVerifyAppPayReturnRequest($this->httpClient, $this->httpRequest);
@@ -89,13 +60,37 @@ class AopCompletePurchaseRequest extends AbstractAopRequest
         return $this->response = new AopCompletePurchaseResponse($this, $data);
     }
 
+    /**
+     * Get the raw data array for this message. The format of this varies from gateway to
+     * gateway, but will usually be either an associative array, or a SimpleXMLElement.
+     *
+     * @return mixed
+     *
+     * @throws InvalidRequestException
+     */
+    public function getData(): mixed
+    {
+        $this->validateParams();
+
+        return $this->getParams();
+    }
+
+    public function validateParams(): void
+    {
+        $this->validate('params');
+    }
+
+    public function getParams(): mixed
+    {
+        return $this->getParameter('params');
+    }
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setParams($value)
+    public function setParams($value): AopCompletePurchaseRequest
     {
         return $this->setParameter('params', $value);
     }

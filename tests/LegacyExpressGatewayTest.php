@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
 use Omnipay\Alipay\Common\Signer;
@@ -8,18 +10,17 @@ use Omnipay\Alipay\Responses\LegacyExpressPurchaseResponse;
 use Omnipay\Alipay\Responses\LegacyQueryResponse;
 use Omnipay\Alipay\Responses\LegacyRefundResponse;
 
-class LegacyExpressGatewayTest extends AbstractGatewayTestCase
+final class LegacyExpressGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var LegacyExpressGateway $gateway
      */
     protected $gateway;
 
-    protected $options;
+    protected array $options;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gateway = new LegacyExpressGateway($this->getHttpClient(), $this->getHttpRequest());
@@ -30,8 +31,8 @@ class LegacyExpressGatewayTest extends AbstractGatewayTestCase
         $this->gateway->setReturnUrl('https://www.example.com/return');
         $this->options = [
             'out_trade_no' => '2014010122390001',
-            'subject'      => 'test',
-            'total_fee'    => '0.01',
+            'subject' => 'test',
+            'total_fee' => '0.01',
         ];
     }
 
@@ -58,8 +59,8 @@ class LegacyExpressGatewayTest extends AbstractGatewayTestCase
                 'refund_items' => [
                     [
                         'out_trade_no' => '2016092021001003280286716852',
-                        'amount'       => '1',
-                        'reason'       => 'test',
+                        'amount' => '1',
+                        'reason' => 'test',
                     ]
                 ]
             ]
@@ -94,13 +95,14 @@ class LegacyExpressGatewayTest extends AbstractGatewayTestCase
 
         parse_str($str, $data);
 
-        $data['sign']      = (new Signer($data))->signWithMD5($this->key);
+        $data['sign'] = (new Signer($data))->signWithMD5($this->key);
         $data['sign_type'] = 'MD5';
 
         $this->gateway = new LegacyExpressGateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->setPartner($this->partner);
         $this->gateway->setKey($this->key);
         $this->gateway->setSignType('RSA');
+        $this->gateway->setAlipayPublicKey(ALIPAY_LEGACY_PUBLIC_KEY);
         $this->gateway->setPrivateKey(ALIPAY_LEGACY_PRIVATE_KEY);
         $this->gateway->setSellerId($this->sellerId);
         $this->gateway->setNotifyUrl('https://www.example.com/notify');

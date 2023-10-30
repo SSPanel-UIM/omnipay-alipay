@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\AopTradePreCreateRequest;
 
-class AopTradePreCreateResponse extends AbstractAopResponse
+final class AopTradePreCreateResponse extends AbstractAopResponse
 {
     protected $key = 'alipay_trade_precreate_response';
 
@@ -12,7 +14,6 @@ class AopTradePreCreateResponse extends AbstractAopResponse
      * @var AopTradePreCreateRequest
      */
     protected $request;
-
 
     public function getQrCode()
     {

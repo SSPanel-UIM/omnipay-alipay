@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\AopTradePayRequest;
 
-class AopTradePayResponse extends AbstractAopResponse
+final class AopTradePayResponse extends AbstractAopResponse
 {
     protected $key = 'alipay_trade_pay_response';
 
@@ -13,27 +15,23 @@ class AopTradePayResponse extends AbstractAopResponse
      */
     protected $request;
 
-
-    public function isPayFailed()
+    public function isPayFailed(): bool
     {
-        return $this->getCode() == '40004';
+        return $this->getCode() === '40004';
     }
 
-
-    public function isPaid()
+    public function isPaid(): bool
     {
-        return $this->getCode() == '10000';
+        return $this->getCode() === '10000';
     }
 
-
-    public function isWaitPay()
+    public function isWaitPay(): bool
     {
-        return $this->getCode() == '10003';
+        return $this->getCode() === '10003';
     }
 
-
-    public function isUnknownException()
+    public function isUnknownException(): bool
     {
-        return $this->getCode() == '20000';
+        return $this->getCode() === '20000';
     }
 }

@@ -1,20 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
-class LegacyAppPurchaseResponse extends AbstractLegacyResponse
+final class LegacyAppPurchaseResponse extends AbstractLegacyResponse
 {
-
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return true;
     }
-
 
     public function getOrderString()
     {

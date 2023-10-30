@@ -1,69 +1,108 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
 use Omnipay\Alipay\Responses\LegacyQueryResponse;
+use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\ResponseInterface;
+use Psr\Http\Client\Exception\NetworkException;
+use Psr\Http\Client\Exception\RequestException;
 
 /**
  * Class LegacyQueryRequest
+ *
  * @package Omnipay\Alipay\Requests
+ *
  * @link    http://aopsdkdownload.cn-hangzhou.alipay-pub.aliyun-inc.com/demo/alipaysinglequery.zip
  */
-class LegacyQueryRequest extends AbstractLegacyRequest
+final class LegacyQueryRequest extends AbstractLegacyRequest
 {
     protected $service = 'single_trade_query';
-
 
     /**
      * Send the request with specified data
      *
-     * @param  mixed $data The data to send
+     * @param mixed $data The data to send
      *
      * @return ResponseInterface
-     * @throws \Psr\Http\Client\Exception\NetworkException
-     * @throws \Psr\Http\Client\Exception\RequestException
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     *
+     * @throws NetworkException
+     * @throws RequestException
+     * @throws InvalidRequestException
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         $url = sprintf('%s?%s', $this->getEndpoint(), http_build_query($this->getData()));
         $result = $this->httpClient->request('GET', $url, [], '')->getBody();
 
-        $xml  = simplexml_load_string($result);
+        $xml = simplexml_load_string((string) $result);
         $json = json_encode($xml);
         $data = json_decode($json, true);
 
         return $this->response = new LegacyQueryResponse($this, $data);
     }
 
-
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
      *
-     * @return mixed
-     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     * @return array
+     *
+     * @throws InvalidRequestException
      */
-    public function getData()
+    public function getData(): array
     {
         $this->validateParams();
 
         $data = [
-            'service'        => $this->service,
-            'partner'        => $this->getPartner(),
-            'trade_no'       => $this->getTradeNo(),
-            'out_trade_no'   => $this->getOutTradeNo(),
+            'service' => $this->service,
+            'partner' => $this->getPartner(),
+            'trade_no' => $this->getTradeNo(),
+            'out_trade_no' => $this->getOutTradeNo(),
             '_input_charset' => $this->getInputCharset(),
-            'sign_type'      => $this->getSignType()
+            'sign_type' => $this->getSignType(),
         ];
         $data['sign'] = $this->sign($data, $this->getSignType());
-        
+
         return $data;
     }
 
+    public function getTradeNo(): mixed
+    {
+        return $this->getParameter('trade_no');
+    }
 
-    protected function validateParams()
+    public function getOutTradeNo(): mixed
+    {
+        return $this->getParameter('out_trade_no');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setTradeNo($value): LegacyQueryRequest
+    {
+        return $this->setParameter('trade_no', $value);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
+    public function setOutTradeNo($value): LegacyQueryRequest
+    {
+        return $this->setParameter('out_trade_no', $value);
+    }
+
+    /**
+     * @throws InvalidRequestException
+     */
+    protected function validateParams(): void
     {
         $this->validate(
             'partner',
@@ -74,45 +113,5 @@ class LegacyQueryRequest extends AbstractLegacyRequest
             'trade_no',
             'out_trade_no'
         );
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getTradeNo()
-    {
-        return $this->getParameter('trade_no');
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getOutTradeNo()
-    {
-        return $this->getParameter('out_trade_no');
-    }
-
-
-    /**
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setTradeNo($value)
-    {
-        return $this->setParameter('trade_no', $value);
-    }
-
-
-    /**
-     * @param $value
-     *
-     * @return $this
-     */
-    public function setOutTradeNo($value)
-    {
-        return $this->setParameter('out_trade_no', $value);
     }
 }

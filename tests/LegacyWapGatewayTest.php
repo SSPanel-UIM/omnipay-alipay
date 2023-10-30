@@ -1,25 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
-use Omnipay\Alipay\Common\Signer;
 use Omnipay\Alipay\LegacyWapGateway;
-use Omnipay\Alipay\Requests\LegacyCompletePurchaseRequest;
-use Omnipay\Alipay\Responses\LegacyCompletePurchaseResponse;
 use Omnipay\Alipay\Responses\LegacyWapPurchaseResponse;
 
-class LegacyWapGatewayTest extends AbstractGatewayTestCase
+final class LegacyWapGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var LegacyWapGateway $gateway
      */
     protected $gateway;
 
-    protected $options;
+    protected array $options;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->gateway = new LegacyWapGateway($this->getHttpClient(), $this->getHttpRequest());
@@ -30,9 +28,9 @@ class LegacyWapGatewayTest extends AbstractGatewayTestCase
         $this->gateway->setReturnUrl('https://www.example.com/return');
         $this->options = [
             'out_trade_no' => '2014010122390001',
-            'subject'      => 'test',
-            'total_fee'    => '0.01',
-            'show_url'     => 'https://www.example.com/item/123456',
+            'subject' => 'test',
+            'total_fee' => '0.01',
+            'show_url' => 'https://www.example.com/item/123456',
         ];
     }
 

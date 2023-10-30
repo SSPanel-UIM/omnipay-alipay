@@ -1,53 +1,52 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\AopCompletePurchaseRequest;
 
-class AopCompletePurchaseResponse extends AbstractResponse
+final class AopCompletePurchaseResponse extends AbstractResponse
 {
-
     /**
      * @var AopCompletePurchaseRequest
      */
     protected $request;
 
-
-    public function getResponseText()
+    public function getResponseText(): string
     {
         if ($this->isSuccessful()) {
             return 'success';
-        } else {
-            return 'fail';
         }
+        return 'fail';
     }
-
 
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return true;
     }
 
-
-    public function isPaid()
+    public function isPaid(): bool
     {
         if (array_get($this->data, 'trade_status')) {
-            if (array_get($this->data, 'trade_status') == 'TRADE_SUCCESS') {
+            if (array_get($this->data, 'trade_status') === 'TRADE_SUCCESS') {
                 return true;
-            } elseif (array_get($this->data, 'trade_status') == 'TRADE_FINISHED') {
-                return true;
-            } else {
-                return false;
             }
-        } elseif (array_get($this->data, 'code') == '10000') {
-            return true;
-        } else {
+            if (array_get($this->data, 'trade_status') === 'TRADE_FINISHED') {
+                return true;
+            }
             return false;
         }
+
+        if (array_get($this->data, 'code') === '10000') {
+            return true;
+        }
+
+        return false;
     }
 }

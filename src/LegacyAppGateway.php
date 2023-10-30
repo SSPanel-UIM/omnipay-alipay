@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay;
 
 use Omnipay\Alipay\Requests\LegacyAppPurchaseRequest;
@@ -11,7 +13,9 @@ use Omnipay\Common\Message\RequestInterface;
  * Class LegacyAppGateway
  *
  * @package Omnipay\Alipay
+ *
  * @link    https://docs.open.alipay.com/59/103563
+ *
  * @method RequestInterface authorize(array $options = [])
  * @method RequestInterface completeAuthorize(array $options = [])
  * @method RequestInterface capture(array $options = [])
@@ -20,21 +24,19 @@ use Omnipay\Common\Message\RequestInterface;
  * @method RequestInterface updateCard(array $options = [])
  * @method RequestInterface deleteCard(array $options = [])
  */
-class LegacyAppGateway extends AbstractLegacyGateway
+final class LegacyAppGateway extends AbstractLegacyGateway
 {
-
     /**
      * Get gateway display name
      *
      * This can be used by carts to get the display name for each gateway.
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Alipay Legacy APP Gateway';
     }
 
-
-    public function getDefaultParameters()
+    public function getDefaultParameters(): array
     {
         $data = parent::getDefaultParameters();
 
@@ -43,44 +45,37 @@ class LegacyAppGateway extends AbstractLegacyGateway
         return $data;
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getRnCheck()
+    public function getRnCheck(): mixed
     {
         return $this->getParameter('rn_check');
     }
-
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setRnCheck($value)
+    public function setRnCheck($value): LegacyAppGateway
     {
         return $this->setParameter('rn_check', $value);
     }
-
 
     /**
      * @param array $parameters
      *
      * @return AbstractRequest
      */
-    public function purchase(array $parameters = [])
+    public function purchase(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(LegacyAppPurchaseRequest::class, $parameters);
     }
 
-
     /**
      * @param array $parameters
      *
-     * @return LegacyRefundNoPwdRequest|AbstractRequest
+     * @return AbstractRequest
      */
-    public function refundNoPwd(array $parameters = [])
+    public function refundNoPwd(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(LegacyRefundNoPwdRequest::class, $parameters);
     }

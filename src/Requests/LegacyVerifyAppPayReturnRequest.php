@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
 use Omnipay\Alipay\Responses\LegacyNotifyResponse;
@@ -8,44 +10,45 @@ use Omnipay\Common\Message\ResponseInterface;
 
 /**
  * Class LegacyVerifyAppPayReturnRequest
+ *
  * @package Omnipay\Alipay\Requests
  */
-class LegacyVerifyAppPayReturnRequest extends AbstractLegacyRequest
+final class LegacyVerifyAppPayReturnRequest extends AbstractLegacyRequest
 {
-
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     * @return mixed
+     *
+     * @return array
+     *
      * @throws InvalidRequestException
      */
-    public function getData()
+    public function getData(): array
     {
         $this->validateParams();
 
         $result = trim($this->getResult());
 
-        if (substr($result, -2, 2) == '\"') {
+        if (str_ends_with($result, '\"')) {
             $result = stripslashes($result);
         }
 
         parse_str($result, $data);
 
-        $sign     = trim($data['sign'], '"');
-        $sign     = str_replace(' ', '+', $sign);
+        $sign = trim($data['sign'], '"');
+        $sign = str_replace(' ', '+', $sign);
         $signType = trim($data['sign_type'], '"');
 
-        $data['sign']      = $sign;
+        $data['sign'] = $sign;
         $data['sign_type'] = $signType;
 
         return $data;
     }
 
-
     /**
      * @throws InvalidRequestException
      */
-    public function validateParams()
+    public function validateParams(): void
     {
         $this->validate(
             'result'
@@ -68,25 +71,19 @@ class LegacyVerifyAppPayReturnRequest extends AbstractLegacyRequest
         }
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getResult()
+    public function getResult(): mixed
     {
         return $this->getParameter('result');
     }
 
-
     /**
      * Send the request with specified data
      *
-     * @param  mixed $data The data to send
+     * @param mixed $data The data to send
      *
      * @return ResponseInterface
-     * @throws InvalidRequestException
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         $request = new LegacyNotifyRequest($this->httpClient, $this->httpRequest);
         $request->initialize($this->parameters->all());
@@ -97,18 +94,15 @@ class LegacyVerifyAppPayReturnRequest extends AbstractLegacyRequest
         /**
          * @var LegacyNotifyResponse $response
          */
-        $response = $request->send();
-
-        return $response;
+        return $request->send();
     }
-
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setResult($value)
+    public function setResult($value): LegacyVerifyAppPayReturnRequest
     {
         return $this->setParameter('result', $value);
     }

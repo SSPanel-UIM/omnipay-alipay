@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\AopTradeCreateRequest;
 
-class AopTradeCreateResponse extends AbstractAopResponse
+final class AopTradeCreateResponse extends AbstractAopResponse
 {
     protected $key = 'alipay_trade_create_response';
 
@@ -13,12 +15,10 @@ class AopTradeCreateResponse extends AbstractAopResponse
      */
     protected $request;
 
-
     public function getTradeNo()
     {
         return $this->getAlipayResponse('trade_no');
     }
-
 
     public function getOutTradeNo()
     {

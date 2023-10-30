@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests;
 
-use Omnipay\Alipay\Common\Signer;
 use Omnipay\Alipay\LegacyAppGateway;
 use Omnipay\Alipay\Responses\LegacyAppPurchaseResponse;
-use Omnipay\Alipay\Responses\LegacyCompletePurchaseResponse;
 
-class LegacyAppGatewayTest extends AbstractGatewayTestCase
+final class LegacyAppGatewayTest extends AbstractGatewayTestCase
 {
-
     /**
      * @var LegacyAppGateway $gateway
      */
@@ -18,7 +17,7 @@ class LegacyAppGatewayTest extends AbstractGatewayTestCase
     protected $options;
 
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -28,11 +27,8 @@ class LegacyAppGatewayTest extends AbstractGatewayTestCase
 
     public function testCreateOrder()
     {
-        $partner    = '123456789';
+        $partner = '123456789';
         $privateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';
-
-        //$partner    = ALIPAY_PARTNER;
-        //$privateKey = ALIPAY_ASSET_DIR . '/dist/common/rsa_private_key.pem';
 
         $this->assertFileExists($privateKey);
 
@@ -44,9 +40,8 @@ class LegacyAppGatewayTest extends AbstractGatewayTestCase
 
         $this->options = [
             'out_trade_no' => '2014010122390001',
-            //'out_trade_no' => date('YmdHis').mt_rand(1000,9999),
-            'subject'      => 'test',
-            'total_fee'    => '0.01',
+            'subject' => 'test',
+            'total_fee' => '0.01',
         ];
 
         /**

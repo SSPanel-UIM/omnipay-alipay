@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay;
 
 use Omnipay\Alipay\Requests\AopTradeCreateRequest;
@@ -10,8 +12,10 @@ use Omnipay\Common\Message\RequestInterface;
  * Class AopJsGateway
  *
  * @package Omnipay\Alipay
+ *
  * @link    https://docs.open.alipay.com/api_1/alipay.trade.create
  * @link    https://myjsapi.alipay.com/jsapi/native/trade-pay.html
+ *
  * @method RequestInterface authorize(array $options = array())
  * @method RequestInterface completeAuthorize(array $options = array())
  * @method RequestInterface capture(array $options = array())
@@ -20,26 +24,24 @@ use Omnipay\Common\Message\RequestInterface;
  * @method RequestInterface updateCard(array $options = array())
  * @method RequestInterface deleteCard(array $options = [])
  */
-class AopJsGateway extends AbstractAopGateway
+final class AopJsGateway extends AbstractAopGateway
 {
-
     /**
      * Get gateway display name
      *
      * This can be used by carts to get the display name for each gateway.
      */
-    public function getName()
+    public function getName(): string
     {
         return 'Alipay Js Gateway';
     }
-
 
     /**
      * @param array $parameters
      *
      * @return AbstractRequest
      */
-    public function purchase(array $parameters = [])
+    public function purchase(array $parameters = []): AbstractRequest
     {
         return $this->createRequest(AopTradeCreateRequest::class, $parameters);
     }

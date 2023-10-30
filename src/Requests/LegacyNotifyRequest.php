@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
+use Exception;
 use Omnipay\Alipay\Common\Signer;
 use Omnipay\Alipay\Responses\LegacyNotifyResponse;
 use Omnipay\Alipay\Responses\VerifyNotifyIdResponse;
@@ -9,26 +12,26 @@ use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\ResponseInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class LegacyNotifyRequest extends AbstractLegacyRequest
+final class LegacyNotifyRequest extends AbstractLegacyRequest
 {
-
     /**
      * @var ParameterBag
      */
-    public $params;
+    public ParameterBag $params;
 
-    protected $verifyNotifyId = true;
+    protected bool $verifyNotifyId = true;
 
-    protected $sort = true;
-
+    protected bool $sort = true;
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
-     * @return mixed
+     *
+     * @return array
+     *
      * @throws InvalidRequestException
      */
-    public function getData()
+    public function getData(): array
     {
         $this->initParams();
 
@@ -37,45 +40,25 @@ class LegacyNotifyRequest extends AbstractLegacyRequest
         return $this->params->all();
     }
 
-
-    /**
-     * @return array|mixed
-     */
-    private function initParams()
-    {
-        $params = $this->getParams();
-
-        if (! $params) {
-            $params = array_merge($_GET, $_POST);
-        }
-
-        $this->params = new ParameterBag($params);
-
-        return $params;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getParams()
+    public function getParams(): mixed
     {
         return $this->getParameter('params');
     }
-
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setParams($value)
+    public function setParams($value): LegacyNotifyRequest
     {
         return $this->setParameter('params', $value);
     }
 
-
-    public function validateParams()
+    /**
+     * @throws InvalidRequestException
+     */
+    public function validateParams(): void
     {
         if (empty($this->params->all())) {
             throw new InvalidRequestException('The `params` or $_REQUEST is empty');
@@ -90,16 +73,16 @@ class LegacyNotifyRequest extends AbstractLegacyRequest
         }
     }
 
-
     /**
      * Send the request with specified data
      *
-     * @param  mixed $data The data to send
+     * @param mixed $data The data to send
      *
      * @return ResponseInterface
+     *
      * @throws InvalidRequestException
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         $this->verifySignature();
 
@@ -112,28 +95,50 @@ class LegacyNotifyRequest extends AbstractLegacyRequest
         return $this->response = new LegacyNotifyResponse($this, $data);
     }
 
+    public function setSort(bool $sort): LegacyNotifyRequest
+    {
+        $this->sort = $sort;
 
-    protected function verifySignature()
+        return $this;
+    }
+
+    /**
+     * @param bool $verifyNotifyId
+     *
+     * @return $this
+     */
+    public function setVerifyNotifyId(bool $verifyNotifyId): LegacyNotifyRequest
+    {
+        $this->verifyNotifyId = $verifyNotifyId;
+
+        return $this;
+    }
+
+    /**
+     * @throws InvalidRequestException
+     * @throws Exception
+     */
+    protected function verifySignature(): void
     {
         $signer = new Signer($this->params->all());
         $signer->setSort($this->sort);
         $content = $signer->getContentToSign();
 
-        $sign     = $this->params->get('sign');
+        $sign = $this->params->get('sign');
         $signType = strtoupper($this->params->get('sign_type'));
 
-        if ($signType == 'MD5') {
+        if ($signType === 'MD5') {
             if (! $this->getKey()) {
                 throw new InvalidRequestException('The `key` is required for `MD5` sign_type');
             }
 
-            $match = (new Signer)->verifyWithMD5($content, $sign, $this->getKey());
-        } elseif ($signType == 'RSA') {
+            $match = (new Signer())->verifyWithMD5($content, $sign, $this->getKey());
+        } elseif ($signType === 'RSA') {
             if (! $this->getAlipayPublicKey()) {
                 throw new InvalidRequestException('The `alipay_public_key` is required for `RSA` sign_type');
             }
 
-            $match = (new Signer)->verifyWithRSA($content, $sign, $this->getAlipayPublicKey());
+            $match = (new Signer())->verifyWithRSA($content, $sign, $this->getAlipayPublicKey());
         } else {
             throw new InvalidRequestException('The `sign_type` is invalid');
         }
@@ -143,8 +148,10 @@ class LegacyNotifyRequest extends AbstractLegacyRequest
         }
     }
 
-
-    protected function verifyNotifyId()
+    /**
+     * @throws InvalidRequestException
+     */
+    protected function verifyNotifyId(): void
     {
         $request = new LegacyVerifyNotifyIdRequest($this->httpClient, $this->httpRequest);
         $request->initialize($this->parameters->all());
@@ -161,29 +168,14 @@ class LegacyNotifyRequest extends AbstractLegacyRequest
         }
     }
 
-
-    /**
-     * @param boolean $verifyNotifyId
-     *
-     * @return $this
-     */
-    public function setVerifyNotifyId($verifyNotifyId)
+    private function initParams(): void
     {
-        $this->verifyNotifyId = $verifyNotifyId;
+        $params = $this->getParams();
 
-        return $this;
-    }
+        if (! $params) {
+            $params = array_merge($_GET, $_POST);
+        }
 
-
-    /**
-     * @param boolean $sort
-     *
-     * @return \Omnipay\Alipay\Requests\LegacyNotifyRequest
-     */
-    public function setSort($sort)
-    {
-        $this->sort = $sort;
-
-        return $this;
+        $this->params = new ParameterBag($params);
     }
 }

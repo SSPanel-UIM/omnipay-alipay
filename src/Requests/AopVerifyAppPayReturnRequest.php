@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Requests;
 
 use Omnipay\Alipay\Common\Signer;
@@ -9,44 +11,46 @@ use Omnipay\Common\Message\ResponseInterface;
 
 /**
  * Class AopVerifyAppPayReturnRequest
+ *
  * @package Omnipay\Alipay\Requests
+ *
  * @link    https://doc.open.alipay.com/docs/doc.htm?treeId=193&articleId=105302&docType=1
  */
-class AopVerifyAppPayReturnRequest extends AbstractAopRequest
+final class AopVerifyAppPayReturnRequest extends AbstractAopRequest
 {
-    protected $key = 'alipay_trade_app_pay_response';
-
+    protected string $key = 'alipay_trade_app_pay_response';
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
      * gateway, but will usually be either an associative array, or a SimpleXMLElement.
+     *
      * @return mixed
+     *
      * @throws InvalidRequestException
      */
-    public function getData()
+    public function getData(): mixed
     {
         $this->validate();
 
         $result = $this->getResult();
 
-        if (substr($result, 0, 3) == '{\"') {
+        if (str_starts_with($result, '{\"')) {
             $result = stripslashes($result);
         }
 
         $response = json_decode($result, true);
 
-        $data              = $response[$this->key];
-        $data['sign']      = $response['sign'];
+        $data = $response[$this->key];
+        $data['sign'] = $response['sign'];
         $data['sign_type'] = $response['sign_type'];
 
         return $data;
     }
 
-
     /**
      * @throws InvalidRequestException
      */
-    public function validate(...$args)
+    public function validate(...$args): void
     {
         parent::validate(
             'result'
@@ -58,91 +62,74 @@ class AopVerifyAppPayReturnRequest extends AbstractAopRequest
             throw new InvalidRequestException('The result should be string');
         }
 
-        if (substr($result, 0, 3) == '{\"') {
+        if (str_starts_with($result, '{\"')) {
             $result = stripslashes($result);
         }
 
         $data = json_decode($result, true);
 
-        if (json_last_error() != JSON_ERROR_NONE) {
+        if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidRequestException('The result should be a valid json string');
         }
 
         if (! isset($data[$this->key])) {
-            throw new InvalidRequestException("The result decode data should contain {$this->key}");
+            throw new InvalidRequestException("The result decode data should contain " . $this->key);
         }
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getResult()
+    public function getResult(): mixed
     {
         return $this->getParameter('result');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setResult($value)
+    public function setResult($value): AopVerifyAppPayReturnRequest
     {
         return $this->setParameter('result', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getMemo()
+    public function getMemo(): mixed
     {
         return $this->getParameter('memo');
     }
 
-
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setMemo($value)
+    public function setMemo($value): AopVerifyAppPayReturnRequest
     {
         return $this->setParameter('memo', $value);
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getResultStatus()
+    public function getResultStatus(): mixed
     {
         return $this->getParameter('resultStatus');
     }
-
 
     /**
      * @param $value
      *
      * @return $this
      */
-    public function setResultStatus($value)
+    public function setResultStatus($value): AopVerifyAppPayReturnRequest
     {
         return $this->setParameter('resultStatus', $value);
     }
 
-
     /**
      * Send the request with specified data
      *
-     * @param  mixed $data The data to send
+     * @param mixed $data The data to send
      *
      * @return ResponseInterface
-     * @throws InvalidRequestException
      */
-    public function sendData($data)
+    public function sendData(mixed $data): ResponseInterface
     {
         $request = new AopNotifyRequest($this->httpClient, $this->httpRequest);
         $request->initialize($this->parameters->all());
@@ -155,8 +142,6 @@ class AopVerifyAppPayReturnRequest extends AbstractAopRequest
         /**
          * @var AopNotifyResponse $response
          */
-        $response = $request->send();
-
-        return $response;
+        return $request->send();
     }
 }

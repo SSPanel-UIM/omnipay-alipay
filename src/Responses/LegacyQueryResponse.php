@@ -1,43 +1,42 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
-class LegacyQueryResponse extends AbstractLegacyResponse
+final class LegacyQueryResponse extends AbstractLegacyResponse
 {
-
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return $this->data['is_success'] === 'T';
     }
-    
+
     /**
      * Is the trade paid?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isPaid()
+    public function isPaid(): bool
     {
         $response = array_get($this->data, 'response');
         if ($response) {
             $trade = array_get($response, 'trade');
             if (array_get($trade, 'trade_status')) {
-                if (array_get($trade, 'trade_status') == 'TRADE_SUCCESS') {
+                if (array_get($trade, 'trade_status') === 'TRADE_SUCCESS') {
                     return true;
-                } elseif (array_get($trade, 'trade_status') == 'TRADE_FINISHED') {
-                    return true;
-                } else {
-                    return false;
                 }
-            } else {
+                if (array_get($trade, 'trade_status') === 'TRADE_FINISHED') {
+                    return true;
+                }
                 return false;
             }
-        } else {
             return false;
         }
+        return false;
     }
 }

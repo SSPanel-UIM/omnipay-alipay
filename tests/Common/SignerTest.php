@@ -1,33 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Tests\Common;
 
+use Exception;
 use Omnipay\Alipay\Common\Signer;
 use PHPUnit\Framework\TestCase;
 
-class SignerTest extends TestCase
+final class SignerTest extends TestCase
 {
-    protected $params;
+    protected array $params;
 
-    protected $key;
+    protected string $key;
 
-    protected $privateKey;
+    protected string $privateKey;
 
 
     public function testSignWithMD5()
     {
         $signer = new Signer($this->params);
-        $sign   = $signer->signWithMD5($this->key);
+        $sign = $signer->signWithMD5($this->key);
         $this->assertEquals('7e63e20bcc6ad2ba695305e340592ffd', $sign);
     }
 
 
+    /**
+     * @throws Exception
+     */
     public function testSignWithRSA()
     {
         $this->assertFileExists($this->privateKey);
 
         $signer = new Signer($this->params);
-        $sign   = $signer->signWithRSA($this->privateKey);
+        $sign = $signer->signWithRSA($this->privateKey);
         $this->assertEquals(
             'Uwz+4a4mKJBNDsGpC+nIZnHYsA30NpoxycIjvlAKC9sLS2t3a/5H7p7EEwSOAQQV2sAu54oIH7wZ4hXXkzYoqRO1T+51hYF+r+uEb9rGYyJzbg3xzV8WFUjypGgxNd8HCAKV9qhkEGdfZ94/VCxYkS+1qxkgqD0MzzHVR20C0NI=',
             $sign
@@ -50,10 +56,10 @@ class SignerTest extends TestCase
         ];
 
         $signer = new Signer($params1);
-        $sign1  = $signer->signWithMD5($this->key);
+        $sign1 = $signer->signWithMD5($this->key);
 
         $signer = new Signer($params2);
-        $sign2  = $signer->signWithMD5($this->key);
+        $sign2 = $signer->signWithMD5($this->key);
 
         $this->assertEquals($sign1, $sign2);
     }
@@ -64,9 +70,9 @@ class SignerTest extends TestCase
         $this->assertSame(['sign', 'sign_type'], (new Signer())->getIgnores());
 
         $params1 = [
-            'aaa'   => '111',
-            'bbb'   => '2222',
-            'ccc'   => '3333',
+            'aaa' => '111',
+            'bbb' => '2222',
+            'ccc' => '3333',
             'apple' => 'jobs',
         ];
 
@@ -96,9 +102,9 @@ class SignerTest extends TestCase
     public function testGetParamsToSign()
     {
         $params1 = [
-            'bbb'   => '2222',
-            'ccc'   => '3333',
-            'aaa'   => '111',
+            'bbb' => '2222',
+            'ccc' => '3333',
+            'aaa' => '111',
             'apple' => 'jobs',
         ];
 
@@ -120,11 +126,11 @@ class SignerTest extends TestCase
     public function testGetContentToSign()
     {
         $params1 = [
-            'bbb'   => '2222',
-            'ccc'   => '3333',
-            'aaa'   => '111',
-            's'     => '"."',
-            'e'     => '',
+            'bbb' => '2222',
+            'ccc' => '3333',
+            'aaa' => '111',
+            's' => '"."',
+            'e' => '',
             'apple' => 'jobs',
         ];
 
@@ -141,7 +147,7 @@ class SignerTest extends TestCase
         $key = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB';
 
         $signer = new Signer();
-        $key    = $signer->convertKey($key, Signer::KEY_TYPE_PUBLIC);
+        $key = $signer->convertKey($key, Signer::KEY_TYPE_PUBLIC);
 
         $this->assertEquals(
             '-----BEGIN PUBLIC KEY-----
@@ -155,7 +161,7 @@ NG9zpgmLCUYuLkxpLQIDAQAB
     }
 
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -163,7 +169,7 @@ NG9zpgmLCUYuLkxpLQIDAQAB
             'aaa' => '111',
             'bbb' => '2222',
             'ccc' => '3333',
-            'dd'  => '',
+            'dd' => '',
             'eee' => null,
             'fff' => false,
             'ggg' => true,

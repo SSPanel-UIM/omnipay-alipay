@@ -1,16 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
-class LegacyRefundNoPwdResponse extends AbstractLegacyResponse
+final class LegacyRefundNoPwdResponse extends AbstractLegacyResponse
 {
-
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return $this->data['is_success'] === 'T';
     }

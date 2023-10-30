@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\AopTradeQueryRequest;
 
-class AopTradeQueryResponse extends AbstractAopResponse
+final class AopTradeQueryResponse extends AbstractAopResponse
 {
     protected $key = 'alipay_trade_query_response';
 
@@ -13,36 +15,29 @@ class AopTradeQueryResponse extends AbstractAopResponse
      */
     protected $request;
 
-
-    public function isPaid()
+    public function isPaid(): bool
     {
-        if ($this->getTradeStatus() == 'TRADE_SUCCESS') {
+        if ($this->getTradeStatus() === 'TRADE_SUCCESS') {
             return true;
-        } elseif ($this->getTradeStatus() == 'TRADE_FINISHED') {
-            return true;
-        } else {
-            return false;
         }
+        if ($this->getTradeStatus() === 'TRADE_FINISHED') {
+            return true;
+        }
+        return false;
     }
 
-
-    /**
-     * @return mixed
-     */
-    public function getTradeStatus()
+    public function getTradeStatus(): mixed
     {
         return $this->getAlipayResponse('trade_status');
     }
 
-
-    public function isWaitPay()
+    public function isWaitPay(): bool
     {
-        return $this->getTradeStatus() == 'WAIT_BUYER_PAY';
+        return $this->getTradeStatus() === 'WAIT_BUYER_PAY';
     }
 
-
-    public function isClosed()
+    public function isClosed(): bool
     {
-        return $this->getTradeStatus() == 'TRADE_CLOSED';
+        return $this->getTradeStatus() === 'TRADE_CLOSED';
     }
 }

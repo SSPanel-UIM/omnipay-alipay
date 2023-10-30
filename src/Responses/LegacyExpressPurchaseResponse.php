@@ -1,41 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\LegacyExpressPurchaseRequest;
 use Omnipay\Common\Message\RedirectResponseInterface;
 
-class LegacyExpressPurchaseResponse extends AbstractLegacyResponse implements RedirectResponseInterface
+final class LegacyExpressPurchaseResponse extends AbstractLegacyResponse implements RedirectResponseInterface
 {
-
     /**
      * @var LegacyExpressPurchaseRequest
      */
     protected $request;
 
-
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return true;
     }
 
-
-    public function isRedirect()
+    public function isRedirect(): bool
     {
         return true;
     }
 
-
-    public function getRedirectUrl()
+    public function getRedirectUrl(): string
     {
         return $this->request->getEndpoint() . '?' . http_build_query($this->getRedirectData());
     }
-
 
     /**
      * Gets the redirect form data array, if the redirect method is POST.
@@ -45,11 +42,10 @@ class LegacyExpressPurchaseResponse extends AbstractLegacyResponse implements Re
         return $this->data;
     }
 
-
     /**
      * Get the required redirect method (either GET or POST).
      */
-    public function getRedirectMethod()
+    public function getRedirectMethod(): string
     {
         return 'GET';
     }

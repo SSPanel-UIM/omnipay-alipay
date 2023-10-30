@@ -1,34 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Omnipay\Alipay\Responses;
 
 use Omnipay\Alipay\Requests\LegacyNotifyRequest;
 
-class LegacyNotifyResponse extends AbstractLegacyResponse
+final class LegacyNotifyResponse extends AbstractLegacyResponse
 {
-
     /**
      * @var LegacyNotifyRequest
      */
     protected $request;
 
-
-    public function getResponseText()
+    public function getResponseText(): string
     {
         if ($this->isSuccessful()) {
             return 'success';
-        } else {
-            return 'fail';
         }
+        return 'fail';
     }
-
 
     /**
      * Is the response successful?
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
         return true;
     }
