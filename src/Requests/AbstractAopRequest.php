@@ -78,7 +78,7 @@ abstract class AbstractAopRequest extends AbstractRequest
             $alipayRootCert = $this->getAlipayRootCert();
             $appCert = $this->getAppCert();
 
-            if (is_file($alipayRootCert) && is_file($appCert)) {
+            if (($alipayRootCert !== null && is_file($alipayRootCert)) && ($appCert !== null && is_file($appCert))) {
                 $this->setParameter('alipay_root_cert_sn', getRootCertSN($alipayRootCert));
                 $this->setParameter('app_cert_sn', getCertSN($appCert));
             }
