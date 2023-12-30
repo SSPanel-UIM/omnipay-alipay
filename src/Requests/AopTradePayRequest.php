@@ -7,8 +7,6 @@ namespace Omnipay\Alipay\Requests;
 use Omnipay\Alipay\Responses\AopTradeCancelResponse;
 use Omnipay\Alipay\Responses\AopTradePayResponse;
 use Omnipay\Alipay\Responses\AopTradeQueryResponse;
-use Psr\Http\Client\Exception\NetworkException;
-use Psr\Http\Client\Exception\RequestException;
 
 /**
  * Class AopTradePayRequest
@@ -19,7 +17,7 @@ use Psr\Http\Client\Exception\RequestException;
  */
 final class AopTradePayRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.pay';
+    protected string $method = 'alipay.trade.pay';
 
     protected bool $notifiable = true;
 
@@ -40,14 +38,10 @@ final class AopTradePayRequest extends AbstractAopRequest
      * @param mixed $data The data to send
      *
      * @return AopTradePayResponse|AopTradeQueryResponse
-     *
-     * @throws NetworkException
-     * @throws RequestException
      */
     public function sendData(mixed $data): AopTradePayResponse|AopTradeQueryResponse
     {
         $data = parent::sendData($data);
-
         $this->response = new AopTradePayResponse($this, $data);
 
         if ($this->response->isWaitPay() && $this->polling) {
@@ -101,9 +95,7 @@ final class AopTradePayRequest extends AbstractAopRequest
      */
     protected function polling(): void
     {
-        $currentAttempt = 0;
-
-        while ($currentAttempt++ < $this->pollingAttempts) {
+        for ($i = 0; $i < $this->pollingAttempts; $i++) {
             /**
              * Query Order Trade Status
              */
@@ -112,9 +104,11 @@ final class AopTradePayRequest extends AbstractAopRequest
             if ($this->response->getCode() >= 40000) {
                 break;
             }
+
             if ($this->response->isPaid()) {
                 break;
             }
+
             if ($this->response->isClosed()) {
                 break;
             }

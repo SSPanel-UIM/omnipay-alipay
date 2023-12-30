@@ -19,7 +19,7 @@ use Psr\Http\Client\Exception\RequestException;
  */
 final class AopTradePreCreateRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.precreate';
+    protected string $method = 'alipay.trade.precreate';
 
     /**
      * Send the request with specified data

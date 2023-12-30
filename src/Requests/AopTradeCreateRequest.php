@@ -17,7 +17,7 @@ use Psr\Http\Client\Exception\RequestException;
  */
 final class AopTradeCreateRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.create';
+    protected string $method = 'alipay.trade.create';
 
     public function getNotifyUrl(): mixed
     {

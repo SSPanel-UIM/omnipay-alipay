@@ -18,7 +18,7 @@ use Psr\Http\Client\Exception\RequestException;
  */
 final class LegacyVerifyNotifyIdRequest extends AbstractLegacyRequest
 {
-    protected $service = 'notify_verify';
+    protected string $service = 'notify_verify';
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to

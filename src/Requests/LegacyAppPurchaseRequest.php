@@ -19,9 +19,9 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class LegacyAppPurchaseRequest extends AbstractLegacyRequest
 {
-    protected $service = 'mobile.securitypay.pay';
+    protected string $service = 'mobile.securitypay.pay';
 
-    protected mixed $privateKey;
+    protected $privateKey;
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to
@@ -39,6 +39,7 @@ final class LegacyAppPurchaseRequest extends AbstractLegacyRequest
 
         $signer = new Signer($params);
         $sign = $signer->signWithRSA($this->privateKey);
+        $resp = [];
 
         $resp['order_string'] = sprintf(
             '%s&sign="%s"&sign_type="RSA"',

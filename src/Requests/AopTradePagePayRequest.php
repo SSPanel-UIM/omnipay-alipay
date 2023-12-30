@@ -15,7 +15,7 @@ use Omnipay\Alipay\Responses\AopTradePagePayResponse;
  */
 final class AopTradePagePayRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.page.pay';
+    protected string $method = 'alipay.trade.page.pay';
 
     protected bool $returnable = true;
 

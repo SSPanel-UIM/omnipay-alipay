@@ -16,7 +16,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class AopTransferToAccountQueryRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.fund.trans.order.query';
+    protected string $method = 'alipay.fund.trans.order.query';
 
     /**
      * Send the request with specified data

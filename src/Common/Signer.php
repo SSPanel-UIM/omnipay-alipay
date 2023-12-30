@@ -178,7 +178,9 @@ final class Signer
             $lines[] = '-----BEGIN RSA PRIVATE KEY-----';
         }
 
-        for ($i = 0; $i < strlen($key); $i += 64) {
+        $key_length = strlen($key);
+
+        for ($i = 0; $i < $key_length; $i += 64) {
             $lines[] = trim(substr($key, $i, 64));
         }
 

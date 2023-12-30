@@ -16,7 +16,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class AopTradeCancelRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.cancel';
+    protected string $method = 'alipay.trade.cancel';
 
     /**
      * Send the request with specified data

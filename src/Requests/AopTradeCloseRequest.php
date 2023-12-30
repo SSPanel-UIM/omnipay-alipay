@@ -16,7 +16,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class AopTradeCloseRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.close';
+    protected string $method = 'alipay.trade.close';
 
     /**
      * Send the request with specified data

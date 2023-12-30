@@ -17,7 +17,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class LegacyRefundNoPwdRequest extends AbstractLegacyRequest
 {
-    protected $service = 'refund_fastpay_by_platform_nopwd';
+    protected string $service = 'refund_fastpay_by_platform_nopwd';
 
     public function getPaymentType(): mixed
     {

@@ -33,4 +33,4 @@ jobs:
       - run: |
           composer install --no-interaction --no-progress --no-suggest
           php vendor/bin/phpinsights analyse --no-interaction --format=github-action \
-          --min-style=90 --min-architecture=90 --min-quality=90
+          --min-style=100 --min-architecture=100 --min-quality=100

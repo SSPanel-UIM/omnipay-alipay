@@ -13,15 +13,15 @@ abstract class AbstractLegacyRequest extends AbstractRequest
 {
     protected string $endpoint = 'https://mapi.alipay.com/gateway.do';
 
-    protected $service;
+    protected string $service;
 
-    protected mixed $key;
+    protected $key;
 
-    protected mixed $signType;
+    protected $signType;
 
-    protected mixed $privateKey;
+    protected $privateKey;
 
-    protected mixed $alipayPublicKey;
+    protected $alipayPublicKey;
 
     public function getEndpoint(): string
     {

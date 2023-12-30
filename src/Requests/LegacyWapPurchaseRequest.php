@@ -17,11 +17,11 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class LegacyWapPurchaseRequest extends AbstractLegacyRequest
 {
-    protected $service = 'alipay.wap.create.direct.pay.by.user';
+    protected string $service = 'alipay.wap.create.direct.pay.by.user';
 
-    protected mixed $key;
+    protected $key;
 
-    protected mixed $privateKey;
+    protected $privateKey;
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to

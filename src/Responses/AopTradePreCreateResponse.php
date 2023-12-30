@@ -8,7 +8,7 @@ use Omnipay\Alipay\Requests\AopTradePreCreateRequest;
 
 final class AopTradePreCreateResponse extends AbstractAopResponse
 {
-    protected $key = 'alipay_trade_precreate_response';
+    protected string $key = 'alipay_trade_precreate_response';
 
     /**
      * @var AopTradePreCreateRequest

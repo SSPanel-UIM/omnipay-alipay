@@ -6,7 +6,7 @@ namespace Omnipay\Alipay\Responses;
 
 abstract class AbstractAopResponse extends AbstractResponse
 {
-    protected $key;
+    protected string $key;
 
     /**
      * Is the response successful?

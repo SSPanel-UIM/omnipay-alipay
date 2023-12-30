@@ -14,17 +14,17 @@ use Psr\Http\Message\StreamInterface;
 
 abstract class AbstractAopRequest extends AbstractRequest
 {
-    protected $method;
+    protected string $method;
 
-    protected mixed $privateKey;
+    protected $privateKey;
 
-    protected mixed $encryptKey;
+    protected $encryptKey;
 
-    protected mixed $alipayPublicKey;
+    protected $alipayPublicKey;
 
-    protected mixed $alipayRootCert;
+    protected $alipayRootCert;
 
-    protected mixed $appCert;
+    protected $appCert;
 
     protected bool $checkAlipayPublicCert = true;
 
@@ -45,19 +45,12 @@ abstract class AbstractAopRequest extends AbstractRequest
     public function getData(): mixed
     {
         $this->validateParams();
-
         $this->getCertSN();
-
         $this->setDefaults();
-
         $this->convertToString();
-
         $data = $this->getParameters();
-
         $data['method'] = $this->method;
-
         ksort($data);
-
         $data['sign'] = $this->sign($data, $this->getSignType());
 
         return $data;
@@ -84,6 +77,7 @@ abstract class AbstractAopRequest extends AbstractRequest
         if (strtoupper($this->getSignType()) === 'RSA2') {
             $alipayRootCert = $this->getAlipayRootCert();
             $appCert = $this->getAppCert();
+
             if (is_file($alipayRootCert) && is_file($appCert)) {
                 $this->setParameter('alipay_root_cert_sn', getRootCertSN($alipayRootCert));
                 $this->setParameter('app_cert_sn', getCertSN($appCert));

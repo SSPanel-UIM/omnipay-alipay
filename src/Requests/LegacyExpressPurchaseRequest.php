@@ -17,7 +17,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class LegacyExpressPurchaseRequest extends AbstractLegacyRequest
 {
-    protected $service = 'create_direct_pay_by_user';
+    protected string $service = 'create_direct_pay_by_user';
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to

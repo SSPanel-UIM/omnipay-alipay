@@ -16,6 +16,7 @@ return [
         PhpCsFixer\Fixer\Import\OrderedImportsFixer::class,
         PhpCsFixer\Fixer\StringNotation\SingleQuoteFixer::class,
         SlevomatCodingStandard\Sniffs\Commenting\InlineDocCommentDeclarationSniff::class,
+        SlevomatCodingStandard\Sniffs\ControlStructures\DisallowEmptySniff::class,
         SlevomatCodingStandard\Sniffs\ControlStructures\DisallowShortTernaryOperatorSniff::class,
         SlevomatCodingStandard\Sniffs\Classes\ForbiddenPublicPropertySniff::class,
         SlevomatCodingStandard\Sniffs\Classes\ModernClassNameReferenceSniff::class,

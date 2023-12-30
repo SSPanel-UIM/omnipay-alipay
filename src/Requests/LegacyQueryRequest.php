@@ -19,7 +19,7 @@ use Psr\Http\Client\Exception\RequestException;
  */
 final class LegacyQueryRequest extends AbstractLegacyRequest
 {
-    protected $service = 'single_trade_query';
+    protected string $service = 'single_trade_query';
 
     /**
      * Send the request with specified data

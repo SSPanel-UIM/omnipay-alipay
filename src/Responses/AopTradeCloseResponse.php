@@ -8,7 +8,7 @@ use Omnipay\Alipay\Requests\AopTradeRefundRequest;
 
 final class AopTradeCloseResponse extends AbstractAopResponse
 {
-    protected $key = 'alipay_trade_close_response';
+    protected string $key = 'alipay_trade_close_response';
 
     /**
      * @var AopTradeRefundRequest

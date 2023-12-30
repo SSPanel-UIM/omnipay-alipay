@@ -16,7 +16,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class AopTradeAppPayRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.app.pay';
+    protected string $method = 'alipay.trade.app.pay';
 
     /**
      * Send the request with specified data

@@ -8,7 +8,7 @@ use Omnipay\Alipay\Requests\AopTransferToAccountRequest;
 
 final class AopTransferToAccountResponse extends AbstractAopResponse
 {
-    protected $key = 'alipay_fund_trans_toaccount_transfer_response';
+    protected string $key = 'alipay_fund_trans_toaccount_transfer_response';
 
     /**
      * @var AopTransferToAccountRequest

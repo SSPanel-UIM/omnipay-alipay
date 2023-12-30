@@ -17,7 +17,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class LegacyRefundRequest extends AbstractLegacyRequest
 {
-    protected $service = 'refund_fastpay_by_platform_pwd';
+    protected string $service = 'refund_fastpay_by_platform_pwd';
 
     /**
      * Get the raw data array for this message. The format of this varies from gateway to

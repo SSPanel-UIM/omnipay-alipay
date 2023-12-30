@@ -8,7 +8,7 @@ use Omnipay\Alipay\Requests\AopTradeOrderSettleRequest;
 
 final class AopTradeOrderSettleResponse extends AbstractAopResponse
 {
-    protected $key = 'alipay_trade_order_settle_response';
+    protected string $key = 'alipay_trade_order_settle_response';
 
     /**
      * @var AopTradeOrderSettleRequest

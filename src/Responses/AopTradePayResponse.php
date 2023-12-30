@@ -8,7 +8,7 @@ use Omnipay\Alipay\Requests\AopTradePayRequest;
 
 final class AopTradePayResponse extends AbstractAopResponse
 {
-    protected $key = 'alipay_trade_pay_response';
+    protected string $key = 'alipay_trade_pay_response';
 
     /**
      * @var AopTradePayRequest

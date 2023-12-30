@@ -15,7 +15,7 @@ use Omnipay\Alipay\Responses\AopTradeWapPayResponse;
  */
 final class AopTradeWapPayRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.wap.pay';
+    protected string $method = 'alipay.trade.wap.pay';
 
     protected bool $returnable = true;
 

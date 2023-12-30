@@ -16,7 +16,7 @@ use Omnipay\Common\Message\ResponseInterface;
  */
 final class AopTradeOrderSettleRequest extends AbstractAopRequest
 {
-    protected $method = 'alipay.trade.order.settle';
+    protected string $method = 'alipay.trade.order.settle';
 
     /**
      * Send the request with specified data

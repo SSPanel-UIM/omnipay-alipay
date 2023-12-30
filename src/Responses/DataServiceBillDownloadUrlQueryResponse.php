@@ -8,7 +8,7 @@ use Omnipay\Alipay\Requests\DataServiceBillDownloadUrlQueryRequest;
 
 final class DataServiceBillDownloadUrlQueryResponse extends AbstractAopResponse
 {
-    protected $key = 'alipay_data_dataservice_bill_downloadurl_query_response';
+    protected string $key = 'alipay_data_dataservice_bill_downloadurl_query_response';
 
     /**
      * @var DataServiceBillDownloadUrlQueryRequest
